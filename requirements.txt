@@ -1,16 +1,36 @@
+# Core Libraries
 wheel
 termcolor
 schedule
-TTS
 prettytable
-webdriver_manager
+
+# AI and Text-to-Speech Libraries
+openai  # For using OpenAI API
+google-auth  # For Google OAuth
+google-auth-oauthlib  # For Google OAuth 2.0 flow
+TTS
+g4f
+assemblyai
+
+# Web Automation and Drivers
 selenium_firefox
 selenium
-g4f
-moviepy
-Pillow==9.5.0
-yagmail
-assemblyai
-srt_equalizer
+webdriver_manager
 undetected_chromedriver
+
+# Video and Image Processing
+moviepy
+Pillow==9.5.0  # Ensure compatibility with moviepy and other dependencies
+
+# Email Automation
+yagmail
+
+# Subtitle Equalization
+srt_equalizer
+
+# Directory and Environment Management
 platformdirs
+python-dotenv  # For managing environment variables securely
+
+# HTTP Requests
+requests
