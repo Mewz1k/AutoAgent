@@ -1,62 +1,21 @@
 import os
-
 from config import ROOT_DIR
-from TTS.utils.manage import ModelManager
-from TTS.utils.synthesizer import Synthesizer
+from google.cloud import texttospeech
 
 class TTS:
     """
-    Class for Text-to-Speech using Coqui TTS.
+    Class for Text-to-Speech using Google Cloud Text-to-Speech.
     """
     def __init__(self) -> None:
         """
         Initializes the TTS class.
-
-        Returns:
-            None
         """
-        venv_site_packages = "venv\\Lib\\site-packages"
-
-        # Path to the .models.json file
-        models_json_path = os.path.join(
-            ROOT_DIR,
-            venv_site_packages,
-            "TTS",
-            ".models.json",
-        )
-
-        # Initialize the ModelManager
-        self._model_manager = ModelManager(models_json_path)
-
-        # Download tts_models/en/ljspeech/fast_pitch
-        self._model_path, self._config_path, self._model_item = \
-            self._model_manager.download_model("tts_models/en/ljspeech/tacotron2-DDC_ph")
-
-        # Download vocoder_models/en/ljspeech/hifigan_v2 as our vocoder
-        voc_path, voc_config_path, _ = self._model_manager. \
-            download_model("vocoder_models/en/ljspeech/univnet")
-        
-        # Initialize the Synthesizer
-        self._synthesizer = Synthesizer(
-            tts_checkpoint=self._model_path,
-            tts_config_path=self._config_path,
-            vocoder_checkpoint=voc_path,
-            vocoder_config=voc_config_path
-        )
-
-    @property
-    def synthesizer(self) -> Synthesizer:
-        """
-        Returns the synthesizer.
-
-        Returns:
-            Synthesizer: The synthesizer.
-        """
-        return self._synthesizer
+        # Set up Google Text-to-Speech client
+        self.client = texttospeech.TextToSpeechClient()
 
     def synthesize(self, text: str, output_file: str = os.path.join(ROOT_DIR, ".mp", "audio.wav")) -> str:
         """
-        Synthesizes the given text into speech.
+        Synthesizes the given text into speech using Google Cloud Text-to-Speech.
 
         Args:
             text (str): The text to synthesize.
@@ -65,11 +24,27 @@ class TTS:
         Returns:
             str: The path to the output file.
         """
-        # Synthesize the text
-        outputs = self.synthesizer.tts(text)
+        # Configure synthesis input
+        synthesis_input = texttospeech.SynthesisInput(text=text)
+
+        # Set voice parameters
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-US",  # Change to desired language
+            ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
+        )
+
+        # Set audio configuration
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.LINEAR16
+        )
+
+        # Perform text-to-speech request
+        response = self.client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
 
         # Save the synthesized speech to the output file
-        self.synthesizer.save_wav(outputs, output_file)
+        with open(output_file, "wb") as out:
+            out.write(response.audio_content)
 
         return output_file
-    
