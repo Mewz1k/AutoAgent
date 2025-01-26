@@ -20,12 +20,37 @@ from classes.Outreach import Outreach
 from classes.AFM import AffiliateMarketing
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
+import json
 
+
+def load_api_keys(file_path: str) -> dict:
+    """
+    Load API keys from the specified JSON file.
+    
+    Args:
+        file_path (str): Path to the JSON file containing API keys.
+    
+    Returns:
+        dict: Dictionary containing API keys.
+    """
+    with open(file_path, "r") as f:
+        return json.load(f)
+
+
+# Path to the secret_client.json file
+SECRET_FILE = "secret_client.json"
+API_KEYS = load_api_keys(SECRET_FILE)
+
+# Configure OpenAI API
+openai.api_key = API_KEYS["openai_api_key"]
 
 def main():
-    # Setup Google Auth
-    credentials = service_account.Credentials.from_service_account_file(
-        os.getenv("GOOGLE_AUTH_CREDENTIALS"),  # Ensure GOOGLE_AUTH_CREDENTIALS env variable is set
+    """
+    Main function to display the menu and handle user input.
+    """
+    # Setup Google Auth using the secret_client.json file
+    credentials = service_account.Credentials.from_service_account_info(
+        API_KEYS["google_credentials"],
         scopes=["https://www.googleapis.com/auth/cloud-platform"]
     )
     auth_request = Request()
@@ -68,6 +93,9 @@ def main():
 
 
 def handle_youtube_flow():
+    """
+    Handle YouTube Shorts automation workflow.
+    """
     info("Starting YT Shorts Automater...")
     cached_accounts = get_accounts("youtube")
 
@@ -115,6 +143,9 @@ def handle_youtube_flow():
 
 
 def add_youtube_account():
+    """
+    Add a new YouTube account to the cache.
+    """
     generated_uuid = str(uuid4())
     success(f" => Generated ID: {generated_uuid}")
     nickname = question(" => Enter a nickname for this account: ")
@@ -131,6 +162,16 @@ def add_youtube_account():
 
 
 def select_account(cached_accounts, platform):
+    """
+    Select an account from the cached accounts.
+
+    Args:
+        cached_accounts (list): List of cached accounts.
+        platform (str): Platform name (YouTube/Twitter).
+
+    Returns:
+        dict: Selected account information.
+    """
     table = PrettyTable()
     table.field_names = ["ID", "UUID", "Nickname", "Niche/Topic"]
     for account in cached_accounts:
@@ -151,6 +192,12 @@ def select_account(cached_accounts, platform):
 
 
 def display_videos_table(videos):
+    """
+    Display the table of videos.
+
+    Args:
+        videos (list): List of videos to display.
+    """
     videos_table = PrettyTable()
     videos_table.field_names = ["ID", "Date", "Title"]
     for video in videos:
@@ -163,6 +210,12 @@ def display_videos_table(videos):
 
 
 def schedule_youtube_cron(youtube):
+    """
+    Schedule a CRON job for YouTube uploads.
+
+    Args:
+        youtube (YouTube): Instance of the YouTube class.
+    """
     info("How often do you want to upload?")
     info("\n============ SCHEDULE OPTIONS ============", False)
     for idx, cron_option in enumerate(YOUTUBE_CRON_OPTIONS):
@@ -185,7 +238,7 @@ if __name__ == "__main__":
 
     first_time = get_first_time_running()
     if first_time:
-        print(colored("Hey! Welcome to MoneyPrinter V2. Let's set things up for you!", "yellow"))
+        print(colored("Hey! Welcome to AutoAgent. Let's set things up for you!", "yellow"))
 
     # Setup file tree and remove temporary files
     assert_folder_structure()
