@@ -3,6 +3,8 @@ wheel
 termcolor
 schedule
 prettytable
+google-cloud-texttospeech
+
 
 # AI and Text-to-Speech Libraries
 openai  # For using OpenAI API
