@@ -22,12 +22,5 @@
   "outreach_message_body_file": "outreach_message.html",
   "assembly_ai_api_key": "",
   "font": "bold_font.ttf",
-  "fonts_dir": "./fonts",
-  "imagemagick_path": "/usr/bin/convert",
-  "songs_dir": "./Songs",
-  "cache_dir": "./.mp",
-  "api_keys": {
-    "openai": "",
-    "google": ""
-  }
+  "imagemagick_path": "Path to magick.exe or on linux/macOS just /usr/bin/convert"
 }
