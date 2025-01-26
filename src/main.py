@@ -23,27 +23,6 @@ from google.auth.transport.requests import Request
 import json
 
 
-def load_api_keys(file_path: str) -> dict:
-    """
-    Load API keys from the specified JSON file.
-    
-    Args:
-        file_path (str): Path to the JSON file containing API keys.
-    
-    Returns:
-        dict: Dictionary containing API keys.
-    """
-    with open(file_path, "r") as f:
-        return json.load(f)
-
-
-# Path to the secret_client.json file
-SECRET_FILE = "secret_client.json"
-API_KEYS = load_api_keys(SECRET_FILE)
-
-# Configure OpenAI API
-openai.api_key = API_KEYS["openai_api_key"]
-
 def main():
     """
     Main function to display the menu and handle user input.
