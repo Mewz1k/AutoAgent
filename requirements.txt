@@ -4,6 +4,8 @@ termcolor
 schedule
 prettytable
 google-cloud-texttospeech
+google-api-python-client
+
 
 
 # AI and Text-to-Speech Libraries
