@@ -2,11 +2,11 @@ from termcolor import colored
 
 def error(message: str, show_emoji: bool = True) -> None:
     """
-    Prints an error message.
+    Prints an error message in red.
 
     Args:
-        message (str): The error message
-        show_emoji (bool): Whether to show the emoji
+        message (str): The error message to display.
+        show_emoji (bool): Whether to include an emoji in the message.
 
     Returns:
         None
@@ -16,11 +16,11 @@ def error(message: str, show_emoji: bool = True) -> None:
 
 def success(message: str, show_emoji: bool = True) -> None:
     """
-    Prints a success message.
+    Prints a success message in green.
 
     Args:
-        message (str): The success message
-        show_emoji (bool): Whether to show the emoji
+        message (str): The success message to display.
+        show_emoji (bool): Whether to include an emoji in the message.
 
     Returns:
         None
@@ -30,11 +30,11 @@ def success(message: str, show_emoji: bool = True) -> None:
 
 def info(message: str, show_emoji: bool = True) -> None:
     """
-    Prints an info message.
+    Prints an informational message in magenta.
 
     Args:
-        message (str): The info message
-        show_emoji (bool): Whether to show the emoji
+        message (str): The info message to display.
+        show_emoji (bool): Whether to include an emoji in the message.
 
     Returns:
         None
@@ -44,11 +44,11 @@ def info(message: str, show_emoji: bool = True) -> None:
 
 def warning(message: str, show_emoji: bool = True) -> None:
     """
-    Prints a warning message.
+    Prints a warning message in yellow.
 
     Args:
-        message (str): The warning message
-        show_emoji (bool): Whether to show the emoji
+        message (str): The warning message to display.
+        show_emoji (bool): Whether to include an emoji in the message.
 
     Returns:
         None
@@ -58,14 +58,14 @@ def warning(message: str, show_emoji: bool = True) -> None:
 
 def question(message: str, show_emoji: bool = True) -> str:
     """
-    Prints a question message and returns the user's input.
+    Displays a question message in magenta and captures user input.
 
     Args:
-        message (str): The question message
-        show_emoji (bool): Whether to show the emoji
+        message (str): The question message to display.
+        show_emoji (bool): Whether to include an emoji in the message.
 
     Returns:
-        user_input (str): The user's input
+        str: The user's input.
     """
     emoji = "❓" if show_emoji else ""
     return input(colored(f"{emoji} {message}", "magenta"))
