@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import platform
@@ -95,3 +96,19 @@ def choose_random_song() -> str:
     except Exception as e:
         error(f"Error occurred while choosing a random song: {str(e)}")
         return ""
+
+def load_api_keys(secret_file: str):
+    """
+    Loads API keys from the secret file.
+
+    Args:
+        secret_file (str): Path to the secret file.
+
+    Returns:
+        dict: Dictionary of API keys.
+    """
+    try:
+        with open(secret_file, "r") as file:
+            return json.load(file)["web"]
+    except Exception as e:
+        raise RuntimeError(f"Failed to load API keys from {secret_file}: {str(e)}")
