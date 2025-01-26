@@ -97,7 +97,7 @@ def choose_random_song() -> str:
         error(f"Error occurred while choosing a random song: {str(e)}")
         return ""
 
-def load_api_keys(secret_file: str):
+def load_api_keys(secret_file: str) -> dict:
     """
     Loads API keys from the secret file.
 
@@ -109,6 +109,18 @@ def load_api_keys(secret_file: str):
     """
     try:
         with open(secret_file, "r") as file:
-            return json.load(file)["web"]
+            data = json.load(file)
+            if "web" in data and "openai_api_key" in data["web"]:
+                success("API keys loaded successfully.")
+            else:
+                warning("API keys file is missing 'openai_api_key' under 'web'.")
+            return data["web"]
+    except json.JSONDecodeError as e:
+        error(f"JSON decoding error: {e}")
+        return {}
+    except FileNotFoundError as e:
+        error(f"Secret file not found: {e}")
+        return {}
     except Exception as e:
-        raise RuntimeError(f"Failed to load API keys from {secret_file}: {str(e)}")
+        error(f"Failed to load API keys from {secret_file}: {str(e)}")
+        return {}
