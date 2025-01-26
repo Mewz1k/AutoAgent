@@ -5,238 +5,128 @@ import srt_equalizer
 
 from termcolor import colored
 
-ROOT_DIR = os.path.dirname(sys.path[0])
+ROOT_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
+
 
 def assert_folder_structure() -> None:
     """
-    Make sure that the nessecary folder structure is present.
-
-    Returns:
-        None
+    Ensures necessary folder structure is present.
     """
-    # Create the .mp folder
-    if not os.path.exists(os.path.join(ROOT_DIR, ".mp")):
-        if get_verbose():
-            print(colored(f"=> Creating .mp folder at {os.path.join(ROOT_DIR, '.mp')}", "green"))
-        os.makedirs(os.path.join(ROOT_DIR, ".mp"))
+    mp_dir = os.path.join(ROOT_DIR, ".mp")
+    if not os.path.exists(mp_dir):
+        print(colored(f"=> Creating .mp folder at {mp_dir}", "green"))
+        os.makedirs(mp_dir)
+
 
 def get_first_time_running() -> bool:
     """
-    Checks if the program is running for the first time by checking if .mp folder exists.
+    Checks if the program is running for the first time.
 
     Returns:
-        exists (bool): True if the program is running for the first time, False otherwise
+        bool: True if first-time run, False otherwise.
     """
     return not os.path.exists(os.path.join(ROOT_DIR, ".mp"))
 
-def get_email_credentials() -> dict:
-    """
-    Gets the email credentials from the config file.
 
-    Returns:
-        credentials (dict): The email credentials
+def _get_config_value(key: str):
     """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["email"]
-
-def get_verbose() -> bool:
-    """
-    Gets the verbose flag from the config file.
-
-    Returns:
-        verbose (bool): The verbose flag
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["verbose"]
-
-def get_firefox_profile_path() -> str:
-    """
-    Gets the path to the Firefox profile.
-
-    Returns:
-        path (str): The path to the Firefox profile
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["firefox_profile"]
-
-def get_headless() -> bool:
-    """
-    Gets the headless flag from the config file.
-
-    Returns:
-        headless (bool): The headless flag
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["headless"]
-
-def get_model() -> str:
-    """
-    Gets the model from the config file.
-
-    Returns:
-        model (str): The model
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["llm"]
-
-def get_twitter_language() -> str:
-    """
-    Gets the Twitter language from the config file.
-
-    Returns:
-        language (str): The Twitter language
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["twitter_language"]
-
-def get_image_model() -> str:
-    """
-    Gets the Image MOdel from the config file.
-
-    Returns:
-        model (str): The image model
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["image_model"]
-
-def get_threads() -> int:
-    """
-    Gets the amount of threads to use for example when writing to a file with MoviePy.
-
-    Returns:
-        threads (int): Amount of threads
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["threads"]
-    
-def get_image_prompt_llm() -> str:
-    """
-    Gets the image prompt for LLM from the config file.
-
-    Returns:
-        prompt (str): The image prompt
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["image_prompt_llm"]
-
-def get_zip_url() -> str:
-    """
-    Gets the URL to the zip file containing the songs.
-
-    Returns:
-        url (str): The URL to the zip file
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["zip_url"]
-
-def get_is_for_kids() -> bool:
-    """
-    Gets the is for kids flag from the config file.
-
-    Returns:
-        is_for_kids (bool): The is for kids flag
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["is_for_kids"]
-
-def get_google_maps_scraper_zip_url() -> str:
-    """
-    Gets the URL to the zip file containing the Google Maps scraper.
-
-    Returns:
-        url (str): The URL to the zip file
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["google_maps_scraper"]
-
-def get_google_maps_scraper_niche() -> str:
-    """
-    Gets the niche for the Google Maps scraper.
-
-    Returns:
-        niche (str): The niche
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["google_maps_scraper_niche"]
-
-def get_scraper_timeout() -> int:
-    """
-    Gets the timeout for the scraper.
-
-    Returns:
-        timeout (int): The timeout
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["scraper_timeout"] or 300
-
-def get_outreach_message_subject() -> str:
-    """
-    Gets the outreach message subject.
-
-    Returns:
-        subject (str): The outreach message subject
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["outreach_message_subject"]
-    
-def get_outreach_message_body_file() -> str:
-    """
-    Gets the outreach message body file.
-
-    Returns:
-        file (str): The outreach message body file
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["outreach_message_body_file"]
-
-def get_assemblyai_api_key() -> str:
-    """
-    Gets the AssemblyAI API key.
-
-    Returns:
-        key (str): The AssemblyAI API key
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["assembly_ai_api_key"]
-    
-def equalize_subtitles(srt_path: str, max_chars: int = 10) -> None:
-    """
-    Equalizes the subtitles in a SRT file.
+    Generic function to fetch a value from `config.json`.
 
     Args:
-        srt_path (str): The path to the SRT file
-        max_chars (int): The maximum amount of characters in a subtitle
+        key (str): The key to fetch.
 
     Returns:
-        None
+        Any: The value associated with the key.
     """
-    srt_equalizer.equalize_srt_file(srt_path, srt_path, max_chars)
-    
+    config_path = os.path.join(ROOT_DIR, "config.json")
+    with open(config_path, "r") as file:
+        config = json.load(file)
+        return config.get(key)
+
+
+# Configuration getters
+def get_email_credentials() -> dict:
+    return _get_config_value("email")
+
+
+def get_verbose() -> bool:
+    return _get_config_value("verbose")
+
+
+def get_headless() -> bool:
+    return _get_config_value("headless")
+
+
+def get_model() -> str:
+    return _get_config_value("llm")
+
+
+def get_image_prompt_llm() -> str:
+    return _get_config_value("image_prompt_llm")
+
+
+def get_image_model() -> str:
+    return _get_config_value("image_model")
+
+
+def get_threads() -> int:
+    return _get_config_value("threads")
+
+
+def get_zip_url() -> str:
+    return _get_config_value("zip_url")
+
+
+def get_is_for_kids() -> bool:
+    return _get_config_value("is_for_kids")
+
+
+def get_scraper_timeout() -> int:
+    return _get_config_value("scraper_timeout") or 300
+
+
+def get_outreach_message_subject() -> str:
+    return _get_config_value("outreach_message_subject")
+
+
+def get_outreach_message_body_file() -> str:
+    return _get_config_value("outreach_message_body_file")
+
+
+def get_assemblyai_api_key() -> str:
+    return _get_config_value("assembly_ai_api_key")
+
+
+def get_google_maps_scraper_zip_url() -> str:
+    return _get_config_value("google_maps_scraper")
+
+
+def get_google_maps_scraper_niche() -> str:
+    return _get_config_value("google_maps_scraper_niche")
+
+
 def get_font() -> str:
-    """
-    Gets the font from the config file.
+    return _get_config_value("font")
 
-    Returns:
-        font (str): The font
-    """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["font"]
 
 def get_fonts_dir() -> str:
     """
-    Gets the fonts directory.
-
-    Returns:
-        dir (str): The fonts directory
+    Returns the fonts directory.
     """
     return os.path.join(ROOT_DIR, "fonts")
 
-def get_imagemagick_path() -> str:
-    """
-    Gets the path to ImageMagick.
 
-    Returns:
-        path (str): The path to ImageMagick
+def get_imagemagick_path() -> str:
+    return _get_config_value("imagemagick_path")
+
+
+# Subtitle processing
+def equalize_subtitles(srt_path: str, max_chars: int = 10) -> None:
     """
-    with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file)["imagemagick_path"]
+    Equalizes subtitles in an SRT file.
+
+    Args:
+        srt_path (str): Path to the SRT file.
+        max_chars (int): Max characters per subtitle.
+    """
+    srt_equalizer.equalize_srt_file(srt_path, srt_path, max_chars)
