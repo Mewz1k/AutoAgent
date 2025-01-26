@@ -110,17 +110,13 @@ def load_api_keys(secret_file: str) -> dict:
     try:
         with open(secret_file, "r") as file:
             data = json.load(file)
-            if "web" in data and "openai_api_key" in data["web"]:
-                success("API keys loaded successfully.")
+            if "openai" in data and "api_key" in data["openai"]:
+                success("✅ API keys loaded successfully.")
+                return data
             else:
-                warning("API keys file is missing 'openai_api_key' under 'web'.")
-            return data["web"]
-    except json.JSONDecodeError as e:
-        error(f"JSON decoding error: {e}")
-        return {}
-    except FileNotFoundError as e:
-        error(f"Secret file not found: {e}")
-        return {}
+                warning("⚠️ API keys file is missing 'openai_api_key' under 'openai'.")
+                return {}
     except Exception as e:
-        error(f"Failed to load API keys from {secret_file}: {str(e)}")
+        error(f"Failed to load API keys from {secret_file}: {e}")
         return {}
+
